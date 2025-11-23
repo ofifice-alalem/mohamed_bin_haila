@@ -1,11 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Database\Seeders;
 
-use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
+use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Seeder;
 
+/**
+ * Seeder الرئيسي الذي يستدعي كل الـ Seeders بالترتيب
+ */
 class DatabaseSeeder extends Seeder
 {
     /**
@@ -13,11 +17,22 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        // تعطيل حماية Mass Assignment
+        Model::unguard();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
+        // ترتيب تنفيذ الـ Seeders
+        $this->call([
+            RoleAndPermissionSeeder::class,  // 1. الأدوار والصلاحيات أولاً
+            AdminUserSeeder::class,          // 2. إنشاء Admin
+            ProductSeeder::class,             // 3. المنتجات
+            StoreSeeder::class,              // 4. المتاجر
+            MarketerSeeder::class,           // 5. المسوقين
+            StockMovementSeeder::class,       // 6. حركات المخزون
+            SaleSeeder::class,               // 7. المبيعات
+            ReturnSeeder::class,             // 8. الإرجاعات
         ]);
+
+        // إعادة تفعيل حماية Mass Assignment
+        Model::reguard();
     }
 }
