@@ -31,3 +31,4 @@ class StockMovementFactory extends Factory
     }
 }
 
+
